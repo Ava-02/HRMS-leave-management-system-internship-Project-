@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login | HRMS System</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-page">
+<div class="login-wrapper">
+
+<!-- Login Form -->
+<form class="login-form active" id="loginForm">
+<h2>HRMS Login</h2>
+<div class="form-group">
+<label for="username">Email</label>
+<input type="email" id="username" required />
+</div>
+<div class="form-group">
+<label for="password">Password</label>
+<input type="password" id="password" required />
+</div>
+<button type="submit">Login</button>
+<p class="switch-link">
+Don’t have an account? <a href="#" id="showRegister">Register here</a>
+</p>
+<p style="text-align: center; margin-top: 10px;">
+  <a href="index.html" class="back-btn">← Back to Home</a>
+</p>
+</form>
+
+<!-- Registration Form -->
+<form class="login-form" id="registerForm">
+<h2>Register New User</h2>
+<div class="form-group">
+<label for="regUsername">Email</label>
+<input type="email" id="regUsername" required />
+</div>
+<div class="form-group">
+<label for="regPassword">Password</label>
+<input type="password" id="regPassword" required />
+</div>
+<div class="form-group">
+<label for="regRole">Role</label>
+<select id="regRole" required>
+<option value="">-- Select Role --</option>
+<option value="employee">Employee</option>
+<option value="manager">Manager</option>
+</select>
+</div>
+<button type="submit">Register</button>
+<p class="switch-link">
+Already have an account? <a href="#" id="showLogin">Login here</a>
+</p>
+<p style="text-align: center; margin-top: 10px;">
+  <a href="index.html" class="back-btn">← Back to Home</a>
+</p>
+</form>
+
+</div>
+
+<script>
+// Load or initialize users
+let users = JSON.parse(localStorage.getItem("users")) || [
+{ username: 'newuser@example.com', password: 'pass123', role: 'employee' },
+{ username: 'manager@hrms.com', password: 'admin', role: 'manager' }
+];
+localStorage.setItem("users", JSON.stringify(users));
+
+// LOGIN
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const username = document.getElementById('username').value.trim();
+const password = document.getElementById('password').value.trim();
+
+const user = users.find(u => u.username === username && u.password === password);
+
+if (!user) {
+alert('Invalid email or password!');
+return;
+}
+
+alert('Login successful!');
+localStorage.setItem('currentUser', JSON.stringify(user));
+
+// Redirect both roles to dashboard
+window.location.href = 'approval.html';
+});
+
+// REGISTER
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const username = document.getElementById('regUsername').value.trim();
+const password = document.getElementById('regPassword').value.trim();
+const role = document.getElementById('regRole').value;
+
+if (!role) {
+alert('Please select a role.');
+return;
+}
+
+if (users.some(u => u.username === username)) {
+alert('User already exists!');
+return;
+}
+
+users.push({ username, password, role });
+localStorage.setItem('users', JSON.stringify(users));
+alert('User registered successfully!');
+e.target.reset();
+});
+
+// Toggle Forms
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const showRegister = document.getElementById('showRegister');
+const showLogin = document.getElementById('showLogin');
+
+showRegister.addEventListener('click', function (e) {
+e.preventDefault();
+loginForm.classList.remove('active');
+registerForm.classList.add('active');
+});
+
+showLogin.addEventListener('click', function (e) {
+e.preventDefault();
+registerForm.classList.remove('active');
+loginForm.classList.add('active');
+});
+</script>
+</body>
+</html>

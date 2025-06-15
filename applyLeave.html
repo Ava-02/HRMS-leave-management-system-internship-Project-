@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply Leave | HRMS System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 🔐 LOGIN CHECK -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser) {
+        alert("Please login to access this page.");
+        window.location.href = "login.html";
+      }
+    });
+  </script>  
+
+  <!-- ✅ BACK BUTTON -->
+  <a href="approval.html" class="back-btn" style="margin: 1rem;">← Back to Dashboard</a>
+
+  <!-- 📝 LEAVE FORM -->
+  <div class="form-wrapper">
+    <form class="leave-form" id="leaveForm">
+      <h2>Apply for Leave</h2>
+      <div class="form-group">
+        <label for="leaveType">Leave Type</label>
+        <select id="leaveType" required>
+          <option value="">-- Select Leave Type --</option>
+          <option value="Casual">Casual Leave</option>
+          <option value="Sick">Sick Leave</option>
+          <option value="Earned">Earned Leave</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" required>
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" required>
+      </div>
+      <div class="form-group">
+        <label for="reason">Reason</label>
+        <textarea id="reason" placeholder="Enter reason for leave" required></textarea>
+      </div>
+      <button type="submit">Submit Leave Request</button>
+    </form>
+  </div>
+
+  <!-- 📄 LEAVE HISTORY -->
+  <div class="form-wrapper">
+    <div class="leave-form">
+      <h2>Your Leave History</h2>
+      <div id="leaveHistory"></div>
+    </div>
+  </div>
+
+  <!-- 📜 JS Scripts -->
+  <script>
+    document.getElementById("leaveForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      const leaveRequests = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+
+      const request = {
+        id: Date.now(),
+        username: currentUser.username,
+        type: document.getElementById("leaveType").value,
+        startDate: document.getElementById("startDate").value,
+        endDate: document.getElementById("endDate").value,
+        reason: document.getElementById("reason").value,
+        status: "Pending"
+      };
+
+      leaveRequests.push(request);
+      localStorage.setItem("leaveRequests", JSON.stringify(leaveRequests));
+      alert("Leave request submitted!");
+      e.target.reset();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const historyContainer = document.getElementById('leaveHistory');
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      const leaves = (JSON.parse(localStorage.getItem('leaveRequests')) || [])
+        .filter(l => l.username === currentUser.username);
+
+      if (leaves.length === 0) {
+        historyContainer.innerHTML = '<p>No leave requests submitted yet.</p>';
+        return;
+      }
+
+      leaves.forEach(leave => {
+        const item = document.createElement('div');
+        item.classList.add('leave-item');
+        item.innerHTML = `
+          <p><strong>${leave.type}</strong> from ${leave.startDate} to ${leave.endDate}</p>
+          <p>Reason: ${leave.reason}</p>
+          <p>Status: <strong>${leave.status}</strong></p>
+          <hr>
+        `;
+        historyContainer.appendChild(item);
+      });
+    });
+  </script>
+</body>
+</html>

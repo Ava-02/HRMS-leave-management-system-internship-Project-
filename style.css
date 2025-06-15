@@ -1,0 +1,555 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #f5f5f5, #e0e0e0);
+  color: #333;
+}
+
+/* Header & Navigation */
+header {
+  background: linear-gradient(to right, #006064, #00838f);
+  padding: 1rem 2rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: #ffd600;
+  transition: 0.3s;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Footer */
+footer {
+  background-color: #00695c;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.95rem;
+}
+
+/* Button */
+.btn-primary {
+  background-color: #00796b;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #004d40;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Landing Page */
+main {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.welcome-box {
+  background: #ffffffcc;
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.welcome-box h1 {
+  color: #004d40;
+  margin-bottom: 1rem;
+  font-size: 2.2rem;
+}
+
+.welcome-box p {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+/* Login Page */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(to right, #dbeafe, #f0f4ff);
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form {
+  display: none;
+  background: #fff;
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  animation: fadeIn 0.5s ease;
+}
+
+.login-form.active {
+  display: block;
+}
+
+.login-form h2 {
+  text-align: center;
+  color: #00796b;
+  margin-bottom: 1.5rem;
+}
+
+.login-form .form-group {
+  margin-bottom: 1.2rem;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #004d40;
+}
+
+.switch-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.switch-link a {
+  color: #00796b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.switch-link a:hover {
+  text-decoration: underline;
+}
+
+/* Apply Leave Page */
+.form-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.leave-form {
+  background: #fff;
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  max-width: 600px;
+  width: 100%;
+  animation: fadeIn 0.6s ease;
+}
+
+.leave-form h2 {
+  text-align: center;
+  color: #00796b;
+  margin-bottom: 1.5rem;
+}
+
+.leave-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.leave-form label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.leave-form select,
+.leave-form input[type="date"],
+.leave-form textarea {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.leave-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.leave-form button {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #00796b;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.leave-form button:hover {
+  background-color: #00796b;
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #00796b;
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+  display: block;
+  font-weight: 500;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background-color: #00796b;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: linear-gradient(to right, #f5f5f5, #e0e0e0);
+}
+
+.dashboard-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Cards */
+.cards {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.card {
+  flex: 1 1 200px;
+  background-color: #e3f2fd;
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  color: #0d47a1;
+  font-size: 1.1rem;
+}
+
+/* Table Section */
+.table-container {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+thead th {
+  background-color: #f0f0f0;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody td {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+/* Action Buttons */
+td button {
+  margin-right: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.approve-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.reject-btn {
+  background-color: #e53935;
+  color: white;
+}
+
+/* Back Button */
+.back-btn {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #00796b;
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #00796b;
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+  .cards {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .login-form,
+  .leave-form {
+    padding: 1.5rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+/* Manager Filter Dropdown */
+#managerControls {
+  margin-bottom: 1.5rem;
+}
+
+#filterStatus {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  margin-left: 0.5rem;
+}
+
+/* Table for Leave Listing */
+#leaveTableBody tr td {
+  vertical-align: top;
+}
+
+/* Empty state styling */
+.table-container td[colspan] {
+  text-align: center;
+  font-style: italic;
+  color: #777;
+}
+
+/* Responsive improvements */
+@media (max-width: 600px) {
+  .table-container {
+    overflow-x: auto;
+  }
+
+  table {
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+
+  .cards {
+    gap: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  #filterStatus {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Column layout for cards */
+.dashboard-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: linear-gradient(to right, #f5f5f5, #e0e0e0);
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-content h2 {
+  font-size: 2rem;
+  color: #00796b;
+  margin-bottom: 1.5rem;
+}
+
+/* Stack cards vertically */
+.cards {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+
+.card {
+  flex: 1 1 200px;
+  background-color: #e3f2fd;
+  text-align: center;
+  padding: 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  color: #00796b;
+  font-size: 1rem;
+}
+
+
+/* Manager controls & table below cards */
+#managerControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+#leaveList {
+  width: 100%;
+  max-width: 1000px;
+}
+
+
+.table-container {
+  margin-top: 0.5rem;
+}
+
+.back-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: #00796b;
+  color: white;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.back-btn:hover {
+  background-color: #004d40;
+}
+

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | HRMS</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.ico" id="favicon" type="image/x-icon" />
+</head>
+<body>
+  <script>
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) {
+      alert("Please login to access this page.");
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h1>HRMS</h1>
+      <a href="approval.html" class="active">Dashboard</a>
+      <a href="#" id="roleLink">Apply Leave</a>
+      <a href="#" id="historyLink">Leave History</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </aside>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-content">
+      <h2 id="dashboardHeading">Dashboard</h2>
+
+      <section id="cardsSection" class="cards">
+        <div class="card">
+          <p>Total Leaves</p>
+          <h3 id="totalLeaves">0</h3>
+        </div>
+        <div class="card">
+          <p>Pending Leaves</p>
+          <h3 id="pendingLeaves">0</h3>
+        </div>
+        <div class="card">
+          <p>Approved Leaves</p>
+          <h3 id="approvedLeaves">0</h3>
+        </div>
+      </section>
+
+      <!-- View Leaves for Managers -->
+      <section id="leaveRequestsSection" style="display: none;">
+        <div id="managerControls">
+          <label for="filterStatus">Filter by Status:</label>
+          <select id="filterStatus">
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <h3>Leave Requests</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="leaveTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Leave History -->
+      <section id="leaveHistorySection" style="display: none;">
+        <h3>Leave History</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Leave Type</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const heading = document.getElementById("dashboardHeading");
+    heading.textContent = `${currentUser.role === "manager" ? "Manager" : "Employee"} Dashboard`;
+    document.title = `${heading.textContent} | HRMS`;
+
+    const favicon = document.getElementById("favicon");
+    if (favicon) favicon.href = currentUser.role === "employee" ? "favicon-employee.ico" : "favicon.ico";
+
+    // Link Controls
+    const roleLink = document.getElementById("roleLink");
+    const historyLink = document.getElementById("historyLink");
+    const leaveRequestsSection = document.getElementById("leaveRequestsSection");
+    const leaveHistorySection = document.getElementById("leaveHistorySection");
+    const cardsSection = document.getElementById("cardsSection");
+
+    const allSections = [leaveRequestsSection, leaveHistorySection, cardsSection];
+    function hideAll() {
+      allSections.forEach(section => section.style.display = "none");
+    }
+
+    if (currentUser.role === "manager") {
+      roleLink.textContent = "View Leaves";
+      roleLink.onclick = () => {
+        hideAll();
+        leaveRequestsSection.style.display = "block";
+        loadManagerTable();
+      };
+    } else {
+      roleLink.textContent = "Apply Leave";
+      roleLink.href = "applyLeave.html";
+    }
+
+    historyLink.onclick = () => {
+      hideAll();
+      leaveHistorySection.style.display = "block";
+      loadHistoryTable();
+    };
+
+    document.querySelector(".sidebar a.active").onclick = () => {
+      hideAll();
+      cardsSection.style.display = "flex";
+    };
+
+    // Load leave requests (Manager View)
+    const leaveTableBody = document.getElementById("leaveTableBody");
+    function loadManagerTable() {
+      const filter = document.getElementById("filterStatus").value;
+      leaveTableBody.innerHTML = "";
+      const leaves = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+      const filtered = leaves.filter(l => filter === "All" || l.status === filter);
+      if (!filtered.length) {
+        leaveTableBody.innerHTML = `<tr><td colspan="7">No leave requests found.</td></tr>`;
+        return;
+      }
+      filtered.forEach((req, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${req.email}</td>
+          <td>${req.type}</td>
+          <td>${req.startDate}</td>
+          <td>${req.endDate}</td>
+          <td>${req.reason}</td>
+          <td><strong>${req.status}</strong></td>
+          <td>
+            ${req.status === "Pending" ? `
+              <button class="approve-btn" onclick="updateLeave(${index}, 'Approved')">Approve</button>
+              <button class="reject-btn" onclick="updateLeave(${index}, 'Rejected')">Reject</button>
+            ` : "—"}
+          </td>
+        `;
+        leaveTableBody.appendChild(row);
+      });
+    }
+
+    function updateLeave(index, status) {
+      const confirmMsg = `Are you sure you want to ${status.toLowerCase()} this leave?`;
+      if (!confirm(confirmMsg)) return;
+      const leaves = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+      leaves[index].status = status;
+      localStorage.setItem("leaveRequests", JSON.stringify(leaves));
+      loadManagerTable();
+    }
+
+    // Filter dropdown event
+    document.getElementById("filterStatus").addEventListener("change", loadManagerTable);
+
+    // Load Leave History
+    const historyTableBody = document.getElementById("historyTableBody");
+    function loadHistoryTable() {
+      historyTableBody.innerHTML = "";
+      const leaves = (JSON.parse(localStorage.getItem("leaveRequests")) || [])
+        .filter(l => l.email === currentUser.username);
+      if (!leaves.length) {
+        historyTableBody.innerHTML = `<tr><td colspan="5">No leave history available.</td></tr>`;
+        return;
+      }
+      leaves.forEach(req => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${req.type}</td>
+          <td>${req.startDate}</td>
+          <td>${req.endDate}</td>
+          <td>${req.reason}</td>
+          <td><strong>${req.status}</strong></td>
+        `;
+        historyTableBody.appendChild(row);
+      });
+    }
+
+    // Load dashboard cards
+    function loadDashboardCards() {
+      const allLeaves = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+      const userLeaves = currentUser.role === "manager" ? allLeaves : allLeaves.filter(l => l.email === currentUser.username);
+      const total = userLeaves.length;
+      const pending = userLeaves.filter(l => l.status === "Pending").length;
+      const approved = userLeaves.filter(l => l.status === "Approved").length;
+      document.getElementById("totalLeaves").textContent = total;
+      document.getElementById("pendingLeaves").textContent = pending;
+      document.getElementById("approvedLeaves").textContent = approved;
+    }
+
+    loadDashboardCards();
+
+    function logout() {
+      localStorage.removeItem("currentUser");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
